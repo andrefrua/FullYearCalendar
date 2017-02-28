@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <title></title>
+    <title>FullYearCalendar - Basic example</title>
 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
@@ -9,184 +9,15 @@
 
     <script src="../src/js/FullYearCalendar.js"></script>
     <link href="../src/css/FullYearCalendar.css" rel="stylesheet" media="screen" />
-
-
-    <style type="text/css">
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-        }
-
-        /**********************************************/
-
-        #divFullYearCalendar {
-            background-color: lightcyan;
-            margin: 0 15px;
-        }
-
-        #fyc_divFullYearCalendar {
-            background-color: lightcoral;
-        }
-
-        #divYear {
-            padding: 5px;
-            text-align: left;
-            margin-left: 50px;
-        }
-
-        /*.spring {
-            background-color: red;
-        }*/
-
-        .vacations {
-            background-color: greenyellow;
-        }
-
-        .autumn {
-            background-Color: rgba(255, 232, 91,1);
-        }
-
-        .weekend {
-            font-weight: bold;
-        }
-
-        .holidays {
-            background-Color: #8bd48f;
-        }
-
-        /*.holidaysLegend {
-            background-Color: #8bd48f;
-            border: 1px solid red;
-            margin:2px;
-        }*/
-
-        .selected {
-            background-Color: lightblue;
-        }
-
-        /*LEGENDS EXAMPLE*/
-        .fyc_legendContainer {
-            padding: 5px;
-        }
-
-        .fyc_legendPropertyDay {
-            border: 1px solid black;
-        }
-
-        .fyc_legendPropertyCaption {
-            padding: 0 5px;
-        }
-
-        .fyc_legendVerticalClear {
-            margin-top: 5px;
-        }
-    </style>
 </head>
 
 <body>
-    <input type="number" id="inputYearNumber" value="2016" />
-    <input type="button" value="Show" onmouseup="FullYearCalendar.GoToYear('divFullYearCalendar', parseInt(document.getElementById('inputYearNumber').value));" />
-    <input type="button" value="Previous Year" onmouseup="FullYearCalendar.GoToPreviousYear('divFullYearCalendar');" />
-    <input type="button" value="Next Year" onmouseup="FullYearCalendar.GoToNextYear('divFullYearCalendar');" />
-    <input type="button" value="Go to current year" onmouseup="FullYearCalendar.GoToYear('divFullYearCalendar', new Date().getFullYear());" />
-
-    <!--<input type="button" value="Get all selected days" onmouseup="console.log(FullYearCalendar.GetSelectedDays('divFullYearCalendar'));" />-->
-
-    <input type="button" value="Add Christmas and new year to holidays" onmouseup="addNewDates();" />
-    <input type="button" value="Refit calendar to container" onmouseup="FullYearCalendar.FitToContainer('divFullYearCalendar');" />
-
-
-    <div id="divYear"></div>
-
     <div id="divFullYearCalendar"></div>
-
-    <div id="divClickedDay"></div>
 
     <script type="text/javascript">
         FullYearCalendar.Init({
-            ContainerElementId: 'divFullYearCalendar',
-            InitialYear: 2016,
-            DayWidth: 26,
-            CssClassMonthRow: 'monthRow',
-            CssClassMonthName: 'monthName',
-            CssClassWeekDayName: 'weekDayName',
-            CssClassDefaultDay: 'defaultDay',
-            ShowWeekDaysNameEachMonth: false,
-            MonthNames: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-            //WeekDayNames: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
-            WeekDayNames: ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
-            AlignInContainer: 'center',
-            WeekStartDay: 'Mon',
-            ShowLegend: true,
-            LegendStyle: 'Inline',
-
-            /* TODO: Create documentation for this object */
-            CustomDates: {
-                vacations: [
-                    { start: '2016-01-15', end: '2016-01-25' },
-                    { start: '2016-02-10', end: '2016-02-13' }
-                ],
-                holidays: [
-                  '2016-04-25',
-                  '2016-05-01',
-                  '2016-12-01',
-                  '2016-12-08',
-                  '2016-11-01'
-                ],
-                autumn: {
-                    start: '2016-09-23',
-                    end: '2016-12-21'
-                },
-                //spring: {
-                //    start: '2016-03-21',
-                //    end: '2016-06-21'
-                //},
-                weekend: 'Sat,Sun'
-            },
-            CustomDatesCaption: {
-                vacations: 'Férias',
-                holidays: 'Feriados',
-                autumn: 'Outono',
-                weekend: 'Fim de semana'
-            },
-            OnDayClick: function (clickedDayContainer, clickedDate) {
-                document.getElementById('divClickedDay').innerHTML = clickedDate;
-            },
-            OnYearChanged: function (currentYear) {
-                document.getElementById('divYear').innerHTML = currentYear;
-            }
+            ContainerElementId: 'divFullYearCalendar'
         })
-
-        function addNewDates() {
-
-            var newCustomDates = {
-                vacations: [
-                    { start: '2016-01-15', end: '2016-01-25' },
-                    { start: '2016-02-10', end: '2016-02-13' }
-                ],
-                holidays: [
-                  '2016-04-25',
-                  '2016-05-01',
-                  '2016-12-01',
-                  '2016-12-08',
-                  '2016-11-01',
-                  '2016-01-01',
-                  '2016-12-25'
-                ],
-                autumn: {
-                    start: '2016-09-23',
-                    end: '2016-12-21'
-                },
-                //spring: {
-                //    start: '2016-03-21',
-                //    end: '2016-06-21'
-                //},
-                weekend: 'Sat,Sun'
-            };
-
-            FullYearCalendar.RefreshCustomDates('divFullYearCalendar', newCustomDates);
-        }
     </script>
 </body>
-
 </html>
