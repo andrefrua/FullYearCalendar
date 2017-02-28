@@ -1,0 +1,12 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/config/applicationhost.config
+/.vs/FullYearCalendarVS/v14/.suo
+/bin/Debug/ConsoleApplication.vshost.exe
+/bin/Debug
+/obj/x86/Debug
+/FullYearCalendarVS.csproj
+/FullYearCalendarVS.csproj.user
+/FullYearCalendarVS.sln
