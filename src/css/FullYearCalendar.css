@@ -1,39 +1,30 @@
 ﻿/*Month names*/
 .fyc_MonthName {
-    min-width: 80px;
     padding: 0 10px;
     color: #333;
     text-align: right;
 }
 
-/*Calendar month row (Days and possible week day names)*/
-.fyc_MonthRow {
-    margin-bottom: 5px;
-}
-
-/* Day name cell */
+/* WeekDay names */
 .fyc_WeekDayName {
     background-Color: #DDD;
     color: #666;
     padding: 2px;
-    text-align: center;
-    vertical-align: middle;
 }
-/* Default days class */
-.fyc_DefaultDay {
+/* Month row */
+.fyc_MonthRow {
+    margin-bottom: 5px;
+}
+/* Default day */
+.fyc_DefaultDay,.fyc_DefaultDay:hover {
     color: #333;
-    font-size: 11px;
-    padding: 2px;
-    text-align: center;
     border: 1px solid #DDD;
-    vertical-align: middle;
 }
 
-    /*Default Css Values*/
     .fyc_DefaultDay:not(:empty):hover {
-        background-color: #333;
+        /*background-color: #333;
         color: #ddd;
-        cursor: pointer;
+        cursor: pointer;*/
     }
 
     .fyc_DefaultDay:last-child {
@@ -43,3 +34,19 @@
     .fyc_DefaultDay:nth-child(7n+0) {
         border-right: 1px solid #BBB;
     }
+
+/* Legend containers styles */
+.fyc_legendContainer {
+}
+
+.fyc_legendPropertyDay {
+    border: 1px solid #BBB;
+}
+
+.fyc_legendPropertyCaption {
+    padding: 0 5px;
+}
+
+.fyc_legendVerticalClear {
+    margin-top: 5px;
+}

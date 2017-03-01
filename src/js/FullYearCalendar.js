@@ -8,12 +8,15 @@
 * @attribute {String} CssClassMonthName - Name of the Css Class to be applied to the cell of the Month name
 * @attribute {String} CssClassWeekDayName - Name of the Css Class to be applied to the Week day name
 * @attribute {String} CssClassDefaultDay - Name of the Css Class to be applied to all the days as a default
-* @attribute {Bool} ShowWeekDaysNameEachMonth - Shows the Week days names on each month. If false only shows one row at the top with the days names
+* @attribute {Boolean} ShowWeekDaysNameEachMonth - Shows the Week days names on each month. If false only shows one row at the top with the days names
 * @attribute {Array} MonthNames - Array of string with the names to give to the Months (Ex: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
 * @attribute {Array} WeekDayNames - Array of string with the names to give to the week days (Ex: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
 * @attribute {String} WeekStartDay - Name of the day to start the week with. Possibilities 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'. If not provided it will start on Sunday
 * @attribute {String} AlignInContainer - Aligns the calendar in the container according to the attribute. ('left', 'center', 'right')
+* @attribute {Boolean} ShowLegend - Show a legend with all the attributes defined on the CustomDates object
+* @attribute {String} LegendStyle - Changes the style of the legend between inline or listed ('Inline' / 'Block')
 * @attribute {Array} CustomDates - Array of Objects TODO: Add documentation for this property
+* @attribute {Array} CustomDatesCaption - Array of Objects TODO: Add documentation for this property
 */
 var FullYearCalendar = {
     TotalNumberOfDays: 41, //Total number of days. It's set to 37 + 4 (To fill gap on mobile view) because it's the maximum possible value to attain with the gap between starting and end of days in the month
@@ -149,6 +152,7 @@ var FullYearCalendar = {
         divMonthName.innerHTML = this.MonthNames[currentMonth];
         divMonthName.style.fontSize = parseInt(calendar.DayWidth / 2) + 'px';
         divMonthName.style.height = calendar.DayWidth + 'px';
+        divMonthName.style.minWidth = 80 + 'px';
 
         divMonthNameContainer.appendChild(divMonthName);
         calendar.ContainerElement.appendChild(divMonthNameContainer);
@@ -188,6 +192,8 @@ var FullYearCalendar = {
             divDayNumber.style.minWidth = calendar.DayWidth + 'px';
             divDayNumber.style.fontSize = parseInt(calendar.DayWidth / 2.1) + 'px';
             divDayNumber.style.display = 'table-cell';
+            divDayNumber.style.textAlign = 'center';
+            divDayNumber.style.verticalAlign = 'middle';
 
             if (iDay > 37) {
                 divDayNumber.setAttribute('isdummyday', true);
@@ -417,7 +423,8 @@ var FullYearCalendar = {
         //Fills the left container and adds it to the Main div
         divLeftContainer.className = calendar.CssClassMonthName;
         divLeftContainer.style.float = 'left';
-        divLeftContainer.innerHTML = '&nbsp;';
+        divLeftContainer.style.minWidth = 80 + 'px';
+        divLeftContainer.innerHTML = '&nbsp;';        
         divWeekDayNames.appendChild(divLeftContainer);
 
         //Fills the actual week day names and add it to the main container
@@ -461,6 +468,8 @@ var FullYearCalendar = {
             divWeekDayName.style.minWidth = calendar.DayWidth + 'px';
             divWeekDayName.style.fontSize = parseInt(calendar.DayWidth / 2.1) + 'px';
             divWeekDayName.style.display = 'table-cell';
+            divWeekDayName.style.textAlign = 'center';
+            divWeekDayName.style.verticalAlign = 'middle';
 
             if (iDay > 37) {
                 divWeekDayName.setAttribute('isdummyday', true);
@@ -540,7 +549,7 @@ var FullYearCalendar = {
             }
         }
 
-        document.getElementById(calendar.ContainerElementId).appendChild(legendContainer);
+        document.getElementById('fyc_' + calendar.ContainerElementId).appendChild(legendContainer);
     },
     //TODO: Missing documentation
     _fitToContainer: function (calendar) {
