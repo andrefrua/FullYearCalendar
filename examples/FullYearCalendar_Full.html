@@ -9,6 +9,7 @@
 
     <script src="../src/js/FullYearCalendar.js"></script>
     <link href="../src/css/FullYearCalendar.css" rel="stylesheet" media="screen" />
+    <script src="https://use.fontawesome.com/cc54a83773.js"></script>
 
     <style>
         /*Override of the default FullYearCalendar Css Classes*/
@@ -30,16 +31,16 @@
             margin-bottom: 5px;
         }
         /* Default day */
-        .defaultDay,.defaultDay:hover {
+        .defaultDay {
             color: #333;
             border: 1px solid #DDD;
         }
 
-            /*.defaultDay:not(:empty):hover {
+            .defaultDay:not(:empty):hover {
                 background-color: #333;
                 color: #ddd;
                 cursor: pointer;
-            }*/
+            }
 
             .defaultDay:last-child {
                 border-right: 1px solid #DDD;
@@ -67,19 +68,28 @@
         /* Custom dates styles */
         .vacations {
             background-color: lightgreen;
+            border: 1px solid lightgreen;
         }
 
         .spring {
             background-color: yellowgreen;
+            border: 1px solid yellowgreen;
         }
 
         .holidays {
             background-color: lightsalmon;
+            border: 1px solid lightsalmon;
         }
 
         .weekend {
             font-weight: bold;
             background-color: #DDD;
+            border: 1px solid  #DDD;
+        }
+
+        .selectedDay {
+            background-color: lightcoral;
+            border: 1px solid lightgreen;
         }
     </style>
 </head>
@@ -91,10 +101,14 @@
         <input type="button" value="< Previous Year" onmouseup="FullYearCalendar.GoToPreviousYear('divFullYearCalendar');" />
         <input type="button" value="Next Year >" onmouseup="FullYearCalendar.GoToNextYear('divFullYearCalendar');" />
         <input type="button" value="Go to current year" onmouseup="FullYearCalendar.GoToYear('divFullYearCalendar', new Date().getFullYear());" />
+        <input type="button" value="Get all selected days" onmouseup="jQuery('#divListSelectedDays').html(JSON.stringify(FullYearCalendar.GetSelectedDays('divFullYearCalendar')));" />
     </div>
 
     <div id="divYear"></div>
     <div id="divFullYearCalendar"></div>
+    <div id="divHoveredDay"></div>
+    <div id="divClickedDay"></div>
+    <div id="divListSelectedDays"></div>
 
     <script type="text/javascript">
         FullYearCalendar.Init({
@@ -105,13 +119,21 @@
             CssClassMonthName: 'monthName',
             CssClassWeekDayName: 'weekDayName',
             CssClassDefaultDay: 'defaultDay',
+            CssClassSelectedDay: 'selectedDay',
             ShowWeekDaysNameEachMonth: false,
             MonthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             WeekDayNames: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
             WeekStartDay: 'Mon',
-            AlignInContainer: 'center',            
+            AlignInContainer: 'center',
             ShowLegend: true,
             LegendStyle: 'Inline',
+            ShowNavigationToolBar: true,
+            CssClassNavButtonPreviousYear: 'btn btn-default btn-sm',
+            CssClassNavButtonNextYear: 'btn btn-default btn-sm',
+            CssClassNavIconPreviousYear: 'fa fa-chevron-left',
+            CssClassNavIconNextYear: 'fa fa-chevron-right',
+            CaptionNavButtonPreviousYear: '',
+            CaptionNavButtonNextYear: '',
             CustomDates: {
                 vacations: [
                     { start: '2017-01-15', end: '2017-01-25' },
@@ -137,8 +159,14 @@
                 weekend: 'Weekends'
             },
             OnYearChanged: function (currentYear) {
-                document.getElementById('divYear').innerHTML = currentYear;
-            }
+                document.getElementById('divYear').innerHTML = 'Year changed to: ' + currentYear;
+            },
+            OnDayMouseOver: function (clickedDayContainer, clickedDate) {
+                document.getElementById('divHoveredDay').innerHTML = '<b>Mouse over on:</b> ' + clickedDate.toISOString().slice(0, 10);
+            },
+            OnDayClick: function (clickedDayContainer, clickedDate) {
+                document.getElementById('divClickedDay').innerHTML = '<b>Clicked on:</b> ' + clickedDate.toISOString().slice(0, 10);
+            },
         })
     </script>
 </body>
