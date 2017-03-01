@@ -15,6 +15,7 @@
 * @attribute {String} AlignInContainer - Aligns the calendar in the container according to the attribute. ('left', 'center', 'right')
 * @attribute {Boolean} ShowLegend - Show a legend with all the attributes defined on the CustomDates object
 * @attribute {String} LegendStyle - Changes the style of the legend between inline or listed ('Inline' / 'Block')
+* @attribute {Boolean} ShowNavigationToolBar - Show the toolbar with built in navigation between year and currently selected year as well
 * @attribute {Array} CustomDates - Array of Objects TODO: Add documentation for this property
 * @attribute {Array} CustomDatesCaption - Array of Objects TODO: Add documentation for this property
 */
@@ -28,11 +29,19 @@ var FullYearCalendar = {
     WeekStartDay: 'Sun',
     ShowLegend: false,
     LegendStyle: 'Inline', //Inline / Block
+    ShowNavigationToolBar: false,
     CssClassMonthRow: 'fyc_MonthRow',
     CssClassMonthName: 'fyc_MonthName',
     CssClassWeekDayName: 'fyc_WeekDayName',
     CssClassDefaultDay: 'fyc_DefaultDay',
     CssClassSelectedDay: 'fyc_SelectedDay',
+    /*Navigation controls Css*/
+    CssClassNavButtonPreviousYear: 'fyc_NavButtonPreviousYear',
+    CssClassNavButtonNextYear: 'fyc_NavButtonNextYear',
+    CssClassNavIconPreviousYear: 'fyc_IconPreviousYear',
+    CssClassNavIconNextYear: 'fyc_IconNextYear',
+    CaptionNavButtonPreviousYear: 'Previous',
+    CaptionNavButtonNextYear: 'Next',
     /**
      * Navigates to the next year according to the current selected year
      * @param {String} calendarElementId - Id of the Html element where the calendar is created
@@ -110,6 +119,8 @@ var FullYearCalendar = {
         }
 
         this._addWeekDayNamesRow(calendar);
+
+        if (calendar.ShowNavigationToolBar === true) this._addNavigationToolBar(calendar);
 
         FullYearCalendar['fyc' + calendar.ContainerElementId] = calendar; //Stores the current calendar so we don'eventType have to recreate everything when changing the year
         this._setSelectedYear(calendar, calendar.InitialYear);
@@ -235,12 +246,21 @@ var FullYearCalendar = {
         calendar.ShowLegend = typeof calendar.ShowLegend === 'undefined' ? this.ShowLegend : calendar.ShowLegend;
         calendar.LegendStyle = typeof calendar.LegendStyle === 'undefined' ? this.LegendStyle : calendar.LegendStyle;
         calendar.TotalCalendarWidth = typeof calendar.TotalCalendarWidth === 'undefined' ? this._calcTotalCalendarWidth(calendar) : 0;
+        calendar.ShowNavigationToolBar = typeof calendar.ShowNavigationToolBar === 'undefined' ? this.ShowNavigationToolBar : calendar.ShowNavigationToolBar;        
+
         //Default class names if they are not supplied
         calendar.CssClassMonthRow = typeof calendar.CssClassMonthRow === 'undefined' ? this.CssClassMonthRow : calendar.CssClassMonthRow;
         calendar.CssClassMonthName = typeof calendar.CssClassMonthName === 'undefined' ? this.CssClassMonthName : calendar.CssClassMonthName;
         calendar.CssClassWeekDayName = typeof calendar.CssClassWeekDayName === 'undefined' ? this.CssClassWeekDayName : calendar.CssClassWeekDayName;
         calendar.CssClassDefaultDay = typeof calendar.CssClassDefaultDay === 'undefined' ? this.CssClassDefaultDay : calendar.CssClassDefaultDay;
         calendar.CssClassSelectedDay = typeof calendar.CssClassSelectedDay === 'undefined' ? this.CssClassSelectedDay : calendar.CssClassSelectedDay;
+        //Navigation toolbar defaults
+        calendar.CssClassNavButtonPreviousYear = typeof calendar.CssClassNavButtonPreviousYear === 'undefined' ? this.CssClassNavButtonPreviousYear : calendar.CssClassNavButtonPreviousYear;
+        calendar.CssClassNavButtonNextYear = typeof calendar.CssClassNavButtonNextYear === 'undefined' ? this.CssClassNavButtonNextYear : calendar.CssClassNavButtonNextYear;
+        calendar.CssClassNavIconPreviousYear = typeof calendar.CssClassNavIconPreviousYear === 'undefined' ? this.CssClassNavIconPreviousYear : calendar.CssClassNavIconPreviousYear;
+        calendar.CssClassNavIconNextYear = typeof calendar.CssClassNavIconNextYear === 'undefined' ? this.CssClassNavIconNextYear : calendar.CssClassNavIconNextYear;
+        calendar.CaptionNavButtonPreviousYear = typeof calendar.CaptionNavButtonPreviousYear === 'undefined' ? this.CaptionNavButtonPreviousYear : calendar.CaptionNavButtonPreviousYear;
+        calendar.CaptionNavButtonNextYear = typeof calendar.CaptionNavButtonNextYear === 'undefined' ? this.CaptionNavButtonNextYear : calendar.CaptionNavButtonNextYear;
     },
     /**
      * Changes the calendar to reflect the year that was actually selected
@@ -252,6 +272,11 @@ var FullYearCalendar = {
         for (var iMonth = 0; iMonth < 12; iMonth++) {
             this._setMonth(calendar, calendar.year, iMonth);
         }
+
+        if (calendar.ShowNavigationToolBar === true) {
+            jQuery('#' + calendar.ContainerElementId).find('.fyc_NavToolbarSelectedYear')[0].innerText = calendar.year;
+        }
+
         typeof calendar.OnYearChanged === 'function' ? calendar.OnYearChanged(calendar.year) : null;
     },
     /**
@@ -438,6 +463,68 @@ var FullYearCalendar = {
         divWeekDayNames.appendChild(divClearFix);
         //Adds the names to the top of the main Calendar container
         calendar.ContainerElement.insertBefore(divWeekDayNames, calendar.ContainerElement.firstChild);
+    },
+    /**
+     * Creates the Html elements for the navigation toolbar and adds them to the main container at the top
+     * @param {Object} calendar - Represents the Calendar initial object
+     */
+    _addNavigationToolBar: function (calendar) {
+        var currentCalendarInstance = this;
+
+        var divNavToolbarWrapper = document.createElement('div'); //Main container for the toolbar controls
+        divNavToolbarWrapper.className = 'fyc_NavToolbarWrapper';
+        //Previous year button navigation
+        var divBlockNavLeftButton = document.createElement('div');
+        divBlockNavLeftButton.className = 'fyc_NavToolbarContainer';
+        var btnPreviousYear = document.createElement('button');
+        btnPreviousYear.className = calendar.CssClassNavButtonPreviousYear;
+        //btnPreviousYear.title = '';
+        btnPreviousYear.innerText = calendar.CaptionNavButtonPreviousYear;
+        var iconPreviousYear = document.createElement('i');
+        iconPreviousYear.className = calendar.CssClassNavIconPreviousYear;
+        btnPreviousYear.appendChild(iconPreviousYear);
+        divBlockNavLeftButton.appendChild(btnPreviousYear);
+        //Current year span
+        var divBlockNavCurrentYear = document.createElement('div');
+        divBlockNavCurrentYear.className = 'fyc_NavToolbarContainer';
+        var spanSelectedYear = document.createElement('span');
+        spanSelectedYear.className = 'fyc_NavToolbarSelectedYear';
+        spanSelectedYear.innerText = calendar.InitialYear;
+        divBlockNavCurrentYear.appendChild(spanSelectedYear);
+        //Next year button navigation
+        var divBlockNavRightButton = document.createElement('div');
+        divBlockNavRightButton.className = 'fyc_NavToolbarContainer';
+        var btnNextYear = document.createElement('button');
+        btnNextYear.className = calendar.CssClassNavButtonNextYear; '';
+        //btnNextYear.title = '';
+        btnNextYear.innerText = calendar.CaptionNavButtonNextYear;
+        var iconNextYear = document.createElement('i');
+        iconNextYear.className = calendar.CssClassNavIconNextYear;
+        btnNextYear.appendChild(iconNextYear);
+        divBlockNavRightButton.appendChild(btnNextYear);
+
+        //Adds the event click to the previous year button
+        if (btnPreviousYear.addEventListener) {  // all browsers except IE before version 9
+            btnPreviousYear.addEventListener("click", function () { currentCalendarInstance._yearNavigation('Previous', calendar); }, false);
+        } else {
+            if (btnPreviousYear.attachEvent) {   // IE before version 9
+                btnPreviousYear.attachEvent("click", this._yearNavigation('Previous', calendar));
+            }
+        }
+        //Adds the event click to the Next year button
+        if (btnNextYear.addEventListener) {  // all browsers except IE before version 9
+            btnNextYear.addEventListener("click", function () { currentCalendarInstance._yearNavigation('Next', calendar); }, false);
+        } else {
+            if (btnNextYear.attachEvent) {   // IE before version 9
+                btnNextYear.attachEvent("click", this._yearNavigation('Next', calendar));
+            }
+        }
+
+        divNavToolbarWrapper.appendChild(divBlockNavLeftButton);
+        divNavToolbarWrapper.appendChild(divBlockNavCurrentYear);
+        divNavToolbarWrapper.appendChild(divBlockNavRightButton);
+
+        calendar.ContainerElement.insertBefore(divNavToolbarWrapper, calendar.ContainerElement.firstChild);
     },
     /**
      * Adds the cells with the week day names with a container for each week
@@ -681,4 +768,19 @@ var FullYearCalendar = {
             calendar.OnDayMouseOver(dayArray[0], new Date(dayArray[1]));
         }
     },
+    /**
+     * Handles the Day click event and fires the OnDayClick function so it's possible to apply some kind of functionality on Day click
+     * @param {String} navigationType - Represents the Calendar initial object
+     * @param {Object} calendar - Represents the Calendar initial object
+     */
+    _yearNavigation: function (navigationType, calendar) {
+        switch (navigationType) {
+            case 'Previous':
+                this.GoToPreviousYear(calendar.ContainerElementId);
+                break;
+            case 'Next':
+                this.GoToNextYear(calendar.ContainerElementId);
+                break;            
+        }
+    }
 };
