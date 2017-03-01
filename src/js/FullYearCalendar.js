@@ -15,6 +15,7 @@
 * @attribute {String} AlignInContainer - Aligns the calendar in the container according to the attribute. ('left', 'center', 'right')
 * @attribute {Boolean} ShowLegend - Show a legend with all the attributes defined on the CustomDates object
 * @attribute {String} LegendStyle - Changes the style of the legend between inline or listed ('Inline' / 'Block')
+* @attribute {Boolean} ShowNavigationToolBar - Show the toolbar with built in navigation between year and currently selected year as well
 * @attribute {Array} CustomDates - Array of Objects TODO: Add documentation for this property
 * @attribute {Array} CustomDatesCaption - Array of Objects TODO: Add documentation for this property
 */
@@ -28,6 +29,7 @@ var FullYearCalendar = {
     WeekStartDay: 'Sun',
     ShowLegend: false,
     LegendStyle: 'Inline', //Inline / Block
+    ShowNavigationToolBar: false,
     CssClassMonthRow: 'fyc_MonthRow',
     CssClassMonthName: 'fyc_MonthName',
     CssClassWeekDayName: 'fyc_WeekDayName',
@@ -110,6 +112,8 @@ var FullYearCalendar = {
         }
 
         this._addWeekDayNamesRow(calendar);
+
+        if (calendar.ShowNavigationToolBar === true) this._addNavigationToolBar(calendar);
 
         FullYearCalendar['fyc' + calendar.ContainerElementId] = calendar; //Stores the current calendar so we don'eventType have to recreate everything when changing the year
         this._setSelectedYear(calendar, calendar.InitialYear);
@@ -233,6 +237,8 @@ var FullYearCalendar = {
         calendar.ShowLegend = typeof calendar.ShowLegend === 'undefined' ? this.ShowLegend : calendar.ShowLegend;
         calendar.LegendStyle = typeof calendar.LegendStyle === 'undefined' ? this.LegendStyle : calendar.LegendStyle;
         calendar.TotalCalendarWidth = typeof calendar.TotalCalendarWidth === 'undefined' ? this._calcTotalCalendarWidth(calendar) : 0;
+        calendar.ShowNavigationToolBar = typeof calendar.ShowNavigationToolBar === 'undefined' ? this.ShowNavigationToolBar : calendar.ShowNavigationToolBar;        
+
         //Default class names if they are not supplied
         calendar.CssClassMonthRow = typeof calendar.CssClassMonthRow === 'undefined' ? this.CssClassMonthRow : calendar.CssClassMonthRow;
         calendar.CssClassMonthName = typeof calendar.CssClassMonthName === 'undefined' ? this.CssClassMonthName : calendar.CssClassMonthName;
@@ -436,6 +442,63 @@ var FullYearCalendar = {
         divWeekDayNames.appendChild(divClearFix);
         //Adds the names to the top of the main Calendar container
         calendar.ContainerElement.insertBefore(divWeekDayNames, calendar.ContainerElement.firstChild);
+    },
+    /**
+     * Creates the Html elements for the navigation toolbar and adds them to the main container at the top
+     * @param {Object} calendar - Represents the Calendar initial object
+     */
+    _addNavigationToolBar: function(calendar){
+        /* BEGIN: TESTING NEW NAV TOOLBAR */
+        var divNavToolbarWrapper = document.createElement('div'); //Container to where the days week names will be added
+        divNavToolbarWrapper.className = 'fyc_NavToolbarWrapper';
+
+
+        var divBlockNavLeftButton = document.createElement('div');
+        divBlockNavLeftButton.className = 'fyc_NavToolbarContainer'
+        var btnPreviousYear = document.createElement('button');
+        btnPreviousYear.className = 'btn btn-default btn-sm';
+        btnPreviousYear.title = 'Previous year';
+        var iconPreviousYear = document.createElement('i');
+        iconPreviousYear.className = 'fa fa-chevron-left';
+        btnPreviousYear.appendChild(iconPreviousYear);
+        divBlockNavLeftButton.appendChild(btnPreviousYear);
+
+        var divBlockNavCurrentYear = document.createElement('div');
+        divBlockNavCurrentYear.className = 'fyc_NavToolbarContainer'
+        var spanSelectedYear = document.createElement('span');
+        spanSelectedYear.className = 'fyc_NavToolbarSelectedYear';
+        spanSelectedYear.innerText = 'CURRENT YEAR';
+        divBlockNavCurrentYear.appendChild(spanSelectedYear);
+
+        var divBlockNavRightButton = document.createElement('div');
+        divBlockNavRightButton.className = 'fyc_NavToolbarContainer';
+        var btnNextYear = document.createElement('button');
+        btnNextYear.className = 'btn btn-default btn-sm';
+        btnNextYear.title = 'Next year';
+        //Adds the event click to the Next year button
+        var currentCalendarInstance = this;
+        if (btnNextYear.addEventListener) {  // all browsers except IE before version 9
+            btnNextYear.addEventListener("click", function () { currentCalendarInstance._YearNavigation(calendar) }, false);
+        } else {
+            if (btnNextYear.attachEvent) {   // IE before version 9
+                btnNextYear.attachEvent("click", this._YearNavigation);
+            }
+        }
+
+
+
+
+        var iconNextYear = document.createElement('i');
+        iconNextYear.className = 'fa fa-chevron-right';
+        btnNextYear.appendChild(iconNextYear);
+        divBlockNavRightButton.appendChild(btnNextYear);
+
+        divNavToolbarWrapper.appendChild(divBlockNavLeftButton);
+        divNavToolbarWrapper.appendChild(divBlockNavCurrentYear);
+        divNavToolbarWrapper.appendChild(divBlockNavRightButton);
+
+        calendar.ContainerElement.insertBefore(divNavToolbarWrapper, calendar.ContainerElement.firstChild);
+        /* END: TESTING NEW NAV TOOLBAR */
     },
     /**
      * Adds the cells with the week day names with a container for each week
