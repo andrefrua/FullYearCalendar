@@ -221,6 +221,8 @@ var FullYearCalendar = {
 
             //Creates the events for the days
             typeof calendar.OnDayClick === 'function' ? this._addDayEvent(divDayNumber[0], 'click', '_dayClick', calendar, divDayNumber) : null;
+            //Creates the events for the days
+            typeof calendar.OnDayMouseOver === 'function' ? this._addDayEvent(divDayNumber[0], 'mouseover', '_dayMouseOver', calendar, divDayNumber) : null;
 
             calendar.MonthDaysArray[currentMonth].push(divDayNumber);
         }
@@ -747,6 +749,24 @@ var FullYearCalendar = {
             dayArray[0].className += ' ' + calendar.CssClassSelectedDay;
         }
         calendar.OnDayClick(dayArray[0], new Date(dayArray[1]));
+    },
+    /**
+     * Handles the Day mouseover event and fires the OnDayMouseOver function so it's possible to apply some kind of functionality on Day mouseover
+     * @param {Object} calendar - Represents the Calendar initial object
+     * @param {Object} dayArray - Complete object representing the day where the mouseover is happening
+     */
+    _dayMouseOver: function (calendar, dayArray) {
+        if (dayArray[1]) {
+            var captionToAdd = '';
+            var dayCssClasses = dayArray[0].className.split(' ');
+            dayCssClasses.forEach(function (cssClass) {
+                if (calendar.CustomDatesCaption[cssClass] !== undefined) {
+                    captionToAdd += calendar.CustomDatesCaption[cssClass] + '\n';
+                }
+            })
+            dayArray[0].title = captionToAdd;
+            calendar.OnDayMouseOver(dayArray[0], new Date(dayArray[1]));
+        }
     },
     /**
      * Handles the Day click event and fires the OnDayClick function so it's possible to apply some kind of functionality on Day click
