@@ -41,6 +41,7 @@
 }
 /* Legend containers styles */
 .fyc_legendContainer {
+    padding: 2px;
 }
 
 .fyc_legendPropertyDay {
@@ -53,4 +54,34 @@
 
 .fyc_legendVerticalClear {
     margin-top: 5px;
+}
+
+
+/* Navigation toolbar */
+.fyc_NavToolbarWrapper {
+    text-align: center;
+}
+
+.fyc_NavToolbarContainer {
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.fyc_NavToolbarSelectedYear {
+    margin: 0 100px;
+}
+
+.fyc_NavButtonPreviousYear, .fyc_NavButtonNextYear {
+    background-Color: #DDD;
+    color: #666;
+    padding: 2px 5px;
+    font-size: 1vw;
+}
+
+.fyc_IconPreviousYear {
+    padding: 2px;
+}
+
+.fyc_IconNextYear {
+    padding: 2px;
 }
