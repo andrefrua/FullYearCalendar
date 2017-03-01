@@ -16,15 +16,15 @@
     margin-bottom: 5px;
 }
 /* Default day */
-.fyc_DefaultDay,.fyc_DefaultDay:hover {
+.fyc_DefaultDay {
     color: #333;
     border: 1px solid #DDD;
 }
 
     .fyc_DefaultDay:not(:empty):hover {
-        /*background-color: #333;
+        background-color: #333;
         color: #ddd;
-        cursor: pointer;*/
+        cursor: pointer;
     }
 
     .fyc_DefaultDay:last-child {
@@ -35,6 +35,10 @@
         border-right: 1px solid #BBB;
     }
 
+
+.fyc_selected {
+    background-color:#666;
+}
 /* Legend containers styles */
 .fyc_legendContainer {
 }

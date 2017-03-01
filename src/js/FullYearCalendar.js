@@ -551,7 +551,10 @@ var FullYearCalendar = {
 
         document.getElementById('fyc_' + calendar.ContainerElementId).appendChild(legendContainer);
     },
-    //TODO: Missing documentation
+    /**
+     * Fits the calendar to the parent container size. If the calendar is too large then it will change display style to mobile
+     * @param {Object} calendar - Represents the Calendar initial object
+     */
     _fitToContainer: function (calendar) {
         //Exits if the Width is set to 0, because it means that the container is not visible on screen
         if (jQuery('#' + calendar.ContainerElementId).width() === 0) return;
@@ -589,7 +592,10 @@ var FullYearCalendar = {
             jQuery('.monthName').css('text-align', 'right');
         }
     },
-    //TODO: Missing documentation
+    /**
+     * Calculate the total width of the calendar using the elements width
+     * @param {Object} calendar - Represents the Calendar initial object
+     */
     _calcTotalCalendarWidth: function (calendar) {
         calendar.TotalCalendarWidth = calendar.DayWidth * 41
                 + jQuery('#' + calendar.ContainerElementId).find('[fyc_monthname], .has-fyc_monthname').width()
@@ -597,7 +603,10 @@ var FullYearCalendar = {
                 + jQuery('#' + calendar.ContainerElementId).find('[fyc_monthname], .has-fyc_monthname').innerWidth()
                 - calendar.DayWidth * 4;
     },
-    //TODO: Missing documentation
+    /**
+     * Initializes the needed event handlers for the calendar
+     * @param {Object} calendar - Represents the Calendar initial object
+     */
     _initEventHandlers: function (calendar) {
         var currentCalendarInstance = this;
 
@@ -609,7 +618,14 @@ var FullYearCalendar = {
             });
         });
     },
-    //TODO: Missing documentation
+    /**
+     * Associates an event to a specific day, any type of event can be added here
+     * @param {Object} sender - Element of the Day to which the event should be associated
+     * @param {String} eventType - Event type (click, mouseover, or any other possible type)
+     * @param {String} functionToCall - Name of the function that should be called when the event is fired
+     * @param {Object} containerElement - Represents the Calendar initial object
+     * @param {Object} containerArray - Actual container of the day
+     */
     _addDayEvent: function (sender, eventType, functionToCall, containerElement, containerArray) {
         var currentFullYearCalendar = this; //Sets a variable with the current FullYearCalendar instance
 
@@ -620,23 +636,32 @@ var FullYearCalendar = {
             sender.attachEvent('on' + eventType, function (e) { return currentFullYearCalendar[functionToCall](containerElement, containerArray); });
         }
     },
-    //TODO: Missing documentation
+    /**
+     * Handles the Day click event and fires the OnDayClick function so it's possible to apply some kind of functionality on Day click
+     * @param {Object} calendar - Represents the Calendar initial object
+     * @param {Object} dayArray - Complete object representing the day that was clicked
+     */
     _dayClick: function (calendar, dayArray) {
         //We can add default stuff here when the day is clicked. For now we will call the function
         //dayArray[0] - Full day container. Can be used to change the style on click
         //dayArray[1] - Date value for the clicked day
 
-        //Only fires the event if a valid day was clicked
-        if (dayArray[1]) {
-            //Adds the selected day to the list of selected days
-            if (calendar._selectedDaysList)
+        if (!dayArray[1]) return; //Exists right away if it's not a valid day
+
+        //Checked if there is already a list of selected days
+        if (calendar._selectedDaysList) {
+            var selectedDayIndex = calendar._selectedDaysList.indexOf(new Date(dayArray[1]).toISOString().slice(0, 10));
+            if (selectedDayIndex > -1) {
+                calendar._selectedDaysList.splice(selectedDayIndex, 1);
+                dayArray[0].className = dayArray[0].className.replace(/ fyc_selected/g, '');
+            } else {
                 calendar._selectedDaysList.push(new Date(dayArray[1]).toISOString().slice(0, 10));
-            else
-                calendar._selectedDaysList = new Array(new Date(dayArray[1]).toISOString().slice(0, 10));
-
-            dayArray[0].className += ' selected';
-
-            calendar.OnDayClick(dayArray[0], new Date(dayArray[1]));
+                dayArray[0].className += ' fyc_selected';
+            }
+        } else {
+            calendar._selectedDaysList = new Array(new Date(dayArray[1]).toISOString().slice(0, 10));
+            dayArray[0].className += ' fyc_selected';
         }
+        calendar.OnDayClick(dayArray[0], new Date(dayArray[1]));
     }
 };
