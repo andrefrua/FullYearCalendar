@@ -32,6 +32,7 @@ var FullYearCalendar = {
     CssClassMonthName: 'fyc_MonthName',
     CssClassWeekDayName: 'fyc_WeekDayName',
     CssClassDefaultDay: 'fyc_DefaultDay',
+    CssClassSelectedDay: 'fyc_SelectedDay',
     /**
      * Navigates to the next year according to the current selected year
      * @param {String} calendarElementId - Id of the Html element where the calendar is created
@@ -186,7 +187,6 @@ var FullYearCalendar = {
 
             //Number of the days container
             divDayNumber = document.createElement('div'); //Created new div for the days
-            divDayNumber.className = calendar.CssClassDefaultDay;
             divDayNumber.setAttribute('fyc_defaultday', 'true');
             divDayNumber.style.height = calendar.DayWidth + 'px';
             divDayNumber.style.minWidth = calendar.DayWidth + 'px';
@@ -213,10 +213,6 @@ var FullYearCalendar = {
 
             calendar.MonthDaysArray[currentMonth].push(divDayNumber);
         }
-
-        //Applies the dimensions and postition of the containers
-        //divMonthInformation.style.width = 30 * this.TotalNumberOfDays + 30 + 'px'; //Adds an extra DayWith because the index starts at 0
-
         divDaysNumbers.style.height = divDayNumber[0].offsetHeight + 'px'; //Set the height of the row for the days numbers
     },
     /**
@@ -242,6 +238,7 @@ var FullYearCalendar = {
         calendar.CssClassMonthName = typeof calendar.CssClassMonthName === 'undefined' ? this.CssClassMonthName : calendar.CssClassMonthName;
         calendar.CssClassWeekDayName = typeof calendar.CssClassWeekDayName === 'undefined' ? this.CssClassWeekDayName : calendar.CssClassWeekDayName;
         calendar.CssClassDefaultDay = typeof calendar.CssClassDefaultDay === 'undefined' ? this.CssClassDefaultDay : calendar.CssClassDefaultDay;
+        calendar.CssClassSelectedDay = typeof calendar.CssClassSelectedDay === 'undefined' ? this.CssClassSelectedDay : calendar.CssClassSelectedDay;
     },
     /**
      * Changes the calendar to reflect the year that was actually selected
@@ -289,7 +286,7 @@ var FullYearCalendar = {
                 var dayValue = calendar.MonthDaysArray[currentMonth][iDayCell][1][2]; //Day index
 
                 var currentDate = new Date(yearValue, monthValue - 1, dayValue); //Uses the previously stored date information
-                calendar.MonthDaysArray[currentMonth][iDayCell][0].className += ' ' + this._applyCustomDateStyle(calendar.CustomDates, currentDate);
+                calendar.MonthDaysArray[currentMonth][iDayCell][0].className += this._applyCustomDateStyle(calendar.CustomDates, currentDate);
             } else {
                 //Add the class hideInMobile to the DayCell above and equal to 35 because if that cell is empty then the entire row can be hidden
                 if (iDayCell >= 35 && calendar.MonthDaysArray[currentMonth][35][0].innerText === '')
@@ -424,7 +421,7 @@ var FullYearCalendar = {
         divLeftContainer.className = calendar.CssClassMonthName;
         divLeftContainer.style.float = 'left';
         divLeftContainer.style.minWidth = 80 + 'px';
-        divLeftContainer.innerHTML = '&nbsp;';        
+        divLeftContainer.innerHTML = '&nbsp;';
         divWeekDayNames.appendChild(divLeftContainer);
 
         //Fills the actual week day names and add it to the main container
@@ -653,14 +650,14 @@ var FullYearCalendar = {
             var selectedDayIndex = calendar._selectedDaysList.indexOf(new Date(dayArray[1]).toISOString().slice(0, 10));
             if (selectedDayIndex > -1) {
                 calendar._selectedDaysList.splice(selectedDayIndex, 1);
-                dayArray[0].className = dayArray[0].className.replace(/ fyc_selected/g, '');
+                dayArray[0].className = dayArray[0].className.replace(' ' + calendar.CssClassSelectedDay, '');
             } else {
                 calendar._selectedDaysList.push(new Date(dayArray[1]).toISOString().slice(0, 10));
-                dayArray[0].className += ' fyc_selected';
+                dayArray[0].className += ' ' + calendar.CssClassSelectedDay;
             }
         } else {
             calendar._selectedDaysList = new Array(new Date(dayArray[1]).toISOString().slice(0, 10));
-            dayArray[0].className += ' fyc_selected';
+            dayArray[0].className += ' ' + calendar.CssClassSelectedDay;
         }
         calendar.OnDayClick(dayArray[0], new Date(dayArray[1]));
     }

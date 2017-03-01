@@ -1,1 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>FullYearCalendar - Days selection example</title>
 
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script src="../src/js/FullYearCalendar.js"></script>
+    <link href="../src/css/FullYearCalendar.css" rel="stylesheet" media="screen" />
+
+    <style>
+        /*Override of the default FullYearCalendar Css Classes*/
+        /*Month names*/
+        .monthName {
+            padding: 0 10px;
+            color: #333;
+            text-align: right;
+        }
+
+        /* WeekDay names */
+        .weekDayName {
+            background-Color: #DDD;
+            color: #666;
+            padding: 2px;
+        }
+        /* Month row */
+        .monthRow {
+            margin-bottom: 5px;
+        }
+        /* Default day */
+        .defaultDay {
+            color: #333;
+            border: 1px solid #DDD;
+        }
+
+            .defaultDay:not(:empty):hover {
+                background-color: #333;
+                color: #ddd;
+                cursor: pointer;
+            }
+
+            .defaultDay:last-child {
+                border-right: 1px solid #DDD;
+            }
+
+            .defaultDay:nth-child(7n+0) {
+                border-right: 1px solid #BBB;
+            }
+
+        /* Full example Css */
+        #divFullYearCalendar {
+            margin: 0 15px;
+        }
+
+        #divControls {
+            margin: 10px 10px 0 10px;
+        }
+
+        #divYear {
+            padding: 5px;
+            text-align: left;
+            margin-left: 50px;
+        }
+        /* Custom dates styles */
+        .vacations {
+            background-color: lightgreen;
+        }
+
+        .spring {
+            background-color: yellowgreen;
+        }
+
+        .holidays {
+            background-color: lightsalmon;
+        }
+
+        .weekend {
+            font-weight: bold;
+            background-color: #DDD;
+        }
+
+        .selectedDay {
+            background-color: lightcoral;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="divControls">
+        <input type="number" id="inputYearNumber" value="2017" />
+        <input type="button" value="Go" onmouseup="FullYearCalendar.GoToYear('divFullYearCalendar', parseInt(document.getElementById('inputYearNumber').value));" />
+        <input type="button" value="< Previous Year" onmouseup="FullYearCalendar.GoToPreviousYear('divFullYearCalendar');" />
+        <input type="button" value="Next Year >" onmouseup="FullYearCalendar.GoToNextYear('divFullYearCalendar');" />
+        <input type="button" value="Go to current year" onmouseup="FullYearCalendar.GoToYear('divFullYearCalendar', new Date().getFullYear());" />
+        <input type="button" value="Get all selected days" onmouseup="jQuery('#divClickedDay').html(JSON.stringify(FullYearCalendar.GetSelectedDays('divFullYearCalendar')));" />
+    </div>
+
+    <div id="divYear"></div>
+    <div id="divFullYearCalendar"></div>
+    <div id="divClickedDay"></div>
+
+    <script type="text/javascript">
+        FullYearCalendar.Init({
+            ContainerElementId: 'divFullYearCalendar',
+            InitialYear: 2017,
+            DayWidth: 24,
+            CssClassMonthRow: 'monthRow',
+            CssClassMonthName: 'monthName',
+            CssClassWeekDayName: 'weekDayName',
+            CssClassDefaultDay: 'defaultDay',
+            CssClassSelectedDay: 'selectedDay',
+            ShowWeekDaysNameEachMonth: false,
+            MonthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            WeekDayNames: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+            WeekStartDay: 'Mon',
+            AlignInContainer: 'center',
+            ShowLegend: true,
+            LegendStyle: 'Inline',
+            CustomDates: {
+                vacations: [
+                    { start: '2017-01-15', end: '2017-01-25' },
+                    { start: '2017-02-10', end: '2017-02-13' }
+                ],
+                holidays: [
+                  '2017-04-25',
+                  '2017-05-01',
+                  '2017-12-01',
+                  '2017-12-08',
+                  '2017-11-01'
+                ],
+                spring: {
+                    start: '2017-03-21',
+                    end: '2017-06-21'
+                },
+                weekend: 'Sat,Sun'
+            },
+            CustomDatesCaption: {
+                vacations: 'Vacations',
+                holidays: 'Holidays',
+                spring: 'Spring',
+                weekend: 'Weekends'
+            },
+            OnYearChanged: function (currentYear) {
+                document.getElementById('divYear').innerHTML = currentYear;
+            },
+            OnDayClick: function (clickedDayContainer, clickedDate) {
+                document.getElementById('divClickedDay').innerHTML = clickedDate;
+            },
+        })
+    </script>
+</body>
+</html>

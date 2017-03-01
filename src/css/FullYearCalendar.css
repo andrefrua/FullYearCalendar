@@ -36,8 +36,8 @@
     }
 
 
-.fyc_selected {
-    background-color:#666;
+.fyc_SelectedDay {
+    background-color: #AAA;
 }
 /* Legend containers styles */
 .fyc_legendContainer {
