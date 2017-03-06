@@ -246,7 +246,7 @@ var FullYearCalendar = {
         calendar.ShowLegend = typeof calendar.ShowLegend === 'undefined' ? this.ShowLegend : calendar.ShowLegend;
         calendar.LegendStyle = typeof calendar.LegendStyle === 'undefined' ? this.LegendStyle : calendar.LegendStyle;
         calendar.TotalCalendarWidth = typeof calendar.TotalCalendarWidth === 'undefined' ? this._calcTotalCalendarWidth(calendar) : 0;
-        calendar.ShowNavigationToolBar = typeof calendar.ShowNavigationToolBar === 'undefined' ? this.ShowNavigationToolBar : calendar.ShowNavigationToolBar;        
+        calendar.ShowNavigationToolBar = typeof calendar.ShowNavigationToolBar === 'undefined' ? this.ShowNavigationToolBar : calendar.ShowNavigationToolBar;
 
         //Default class names if they are not supplied
         calendar.CssClassMonthRow = typeof calendar.CssClassMonthRow === 'undefined' ? this.CssClassMonthRow : calendar.CssClassMonthRow;
@@ -434,35 +434,37 @@ var FullYearCalendar = {
             arrayDivMonths[iMonth].firstChild.style.height = divWeekDayNames.firstChild.offsetHeight + 'px';
         }
 
-        //Creates one container to be placed at the top of the calendar
-        //Shows week days on top of the calendar once
-        divWeekDayNames = document.createElement('div'); //Container to where the days week names will be added
-        var divLeftContainer = document.createElement('div'); //Container that will be on top of the Months names
-        var divRightContainer = document.createElement('div'); //Container that will actually have the Week days names
-        divWeekDayNames.className = 'divWeekDayNamesYearly';
+        if (!this.ShowWeekDaysNameEachMonth) {
+            //Creates one container to be placed at the top of the calendar
+            //Shows week days on top of the calendar once
+            divWeekDayNames = document.createElement('div'); //Container to where the days week names will be added
+            var divLeftContainer = document.createElement('div'); //Container that will be on top of the Months names
+            var divRightContainer = document.createElement('div'); //Container that will actually have the Week days names
+            divWeekDayNames.className = 'divWeekDayNamesYearly';
 
-        if (this.ShowWeekDaysNameEachMonth)
-            divWeekDayNames.style.display = 'none';
+            if (this.ShowWeekDaysNameEachMonth)
+                divWeekDayNames.style.display = 'none';
 
-        //Fills the left container and adds it to the Main div
-        divLeftContainer.className = calendar.CssClassMonthName;
-        divLeftContainer.style.float = 'left';
-        divLeftContainer.style.minWidth = 80 + 'px';
-        divLeftContainer.innerHTML = '&nbsp;';
-        divWeekDayNames.appendChild(divLeftContainer);
+            //Fills the left container and adds it to the Main div
+            divLeftContainer.className = calendar.CssClassMonthName;
+            divLeftContainer.style.float = 'left';
+            divLeftContainer.style.minWidth = 80 + 'px';
+            divLeftContainer.innerHTML = '&nbsp;';
+            divWeekDayNames.appendChild(divLeftContainer);
 
-        //Fills the actual week day names and add it to the main container
-        divRightContainer.className = calendar.CssClassMonthRow;
-        divRightContainer.style.float = 'left';
-        this._addWeekDayNamesToContainer(calendar, divRightContainer);
-        divWeekDayNames.appendChild(divRightContainer);
+            //Fills the actual week day names and add it to the main container
+            divRightContainer.className = calendar.CssClassMonthRow;
+            divRightContainer.style.float = 'left';
+            this._addWeekDayNamesToContainer(calendar, divRightContainer);
+            divWeekDayNames.appendChild(divRightContainer);
 
-        //Adds a clear div so the next month shows under the previous one
-        var divClearFix = document.createElement('div');
-        divClearFix.style.clear = 'both';
-        divWeekDayNames.appendChild(divClearFix);
-        //Adds the names to the top of the main Calendar container
-        calendar.ContainerElement.insertBefore(divWeekDayNames, calendar.ContainerElement.firstChild);
+            //Adds a clear div so the next month shows under the previous one
+            var divClearFix = document.createElement('div');
+            divClearFix.style.clear = 'both';
+            divWeekDayNames.appendChild(divClearFix);
+            //Adds the names to the top of the main Calendar container
+            calendar.ContainerElement.insertBefore(divWeekDayNames, calendar.ContainerElement.firstChild);
+        }
     },
     /**
      * Creates the Html elements for the navigation toolbar and adds them to the main container at the top
@@ -672,7 +674,9 @@ var FullYearCalendar = {
             jQuery('#' + calendar.ContainerElementId).find('[isdummyday], .has-isdummyday').css('display', 'none');
 
             //WeekDays names handling
-            jQuery('.divWeekDayNamesMonthly').css('display', 'none');
+            if (!this.ShowWeekDaysNameEachMonth) {
+                jQuery('.divWeekDayNamesMonthly').css('display', 'none');
+            }
             jQuery('.divWeekDayNamesYearly').css('display', 'block');
 
             jQuery('.monthName').css('text-align', 'right');
@@ -780,7 +784,7 @@ var FullYearCalendar = {
                 break;
             case 'Next':
                 this.GoToNextYear(calendar.ContainerElementId);
-                break;            
+                break;
         }
     }
 };
